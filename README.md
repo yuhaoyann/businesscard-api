@@ -1,6 +1,4 @@
-# Interview Scheduler API
-
-## Setup
+# BusinessCard  API
 
 Install dependencies with `npm install`.
 
@@ -11,8 +9,9 @@ enter `CREATE ROLE businesscard WITH LOGIN password 'businesscard'`;
 enter `CREATE DATABASE businesscard OWNER businesscard`;
 
 ## Creating The DB
+enter `CREATE DATABASE businesscard OWNER businesscard`;
 
-Use the `psql -U businesscard` command to login to the PostgreSQL server with the username `development` and the password `development`. This command **MUST** be run in a vagrant terminal, we are using the PostgreSQL installation provided in the vagrant environment.
+## Setup
 
 Copy the `.env.example` file to `.env.development` and fill in the necessary PostgreSQL configuration. The `node-postgres` library uses these environment variables by default.
 
