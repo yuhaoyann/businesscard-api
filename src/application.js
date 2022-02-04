@@ -38,7 +38,7 @@ module.exports = function application(
   app.use(bodyparser.json());
 
   app.use("/api", users(db));
-  // app.use("/api", cards(db));
+  app.use("/api", cards(db));
 
   if (ENV === "development" || ENV === "test") {
     Promise.all([
