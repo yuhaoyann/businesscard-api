@@ -10,8 +10,8 @@ const app = express();
 
 const db = require("./db");
 
-// const users = require("./routes/users");
-// const cards = require("./routes/cards");
+const users = require("./routes/users");
+const cards = require("./routes/cards");
 
 
 function read(file) {
@@ -37,9 +37,8 @@ module.exports = function application(
   app.use(helmet());
   app.use(bodyparser.json());
 
-  // app.use("/api", days(db));
-  // app.use("/api", appointments(db, actions.updateAppointment));
-  // app.use("/api", interviewers(db));
+  app.use("/api", users(db));
+  // app.use("/api", cards(db));
 
   if (ENV === "development" || ENV === "test") {
     Promise.all([
