@@ -5,8 +5,8 @@ module.exports = db => {
       `SELECT * FROM users`
       ).then(({ rows: users}) => {
         response.json(users);
-      });
-    
+      })
+      .catch(error => console.log(error));
     });
   
     return router;
