@@ -2,23 +2,36 @@ const router = require("express").Router();
 
 module.exports = db => {
   router.get("/cards", (request, response) => {
-    db.query(
-      `
-      SELECT * FROM cards
-    `
-    ).then(({ rows: cards}) => {
+    const queryString =  `SELECT * FROM cards`
+    db.query(queryString)
+     .then(({ rows: cards}) => {
       response.json(cards);
-    });
+    })
+    .catch(error => console.log(error));
+  })
+ 
+   router.post("/cards", (request, response) => {
+    const { photo,email,phone,facebook,github,linkedln,instagram,bio } = request.body
+    const queryString = `INSERT INTO cards (photo,email,phone,facebook,github,linkedln,instagram,bio) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) returning *`
+    const queryparams = [photo,email,phone,facebook,github,linkedln,instagram,bio]
+    return db.query(queryString,queryparams)
+             .then((response) => {
+                return response.rows[0];
+                })
+             .catch(error => console.log(error));
   
   });
 
- 
-
-  // router.put("/appointments/:id", (request, response) => {
-  //   if (process.env.TEST_ERROR) {
-  //     setTimeout(() => response.status(500).json({}), 1000);
-  //     return;
-  //   }
+  // router.put("/cards/:id", (request, response) => {
+  //   const queryString = `update INTO cards (photo,email,phone,facebook,github,linkedln,instagram,bio) VALUES ($1,$2,$3) returning *`;
+  //   const queryparams =[]
+  //   return db.query(queryString,queryparams)
+  //     .then((res) => {
+  //       return res.rows[0];
+  //     })
+  //     .catch(error => console.log(error));
+  
+  // })
 
   //   const { student, interviewer } = request.body.interview;
 
@@ -39,22 +52,32 @@ module.exports = db => {
   //     .catch(error => console.log(error));
   // });
 
-  // router.delete("/appointments/:id", (request, response) => {
-  //   if (process.env.TEST_ERROR) {
-  //     setTimeout(() => response.status(500).json({}), 1000);
-  //     return;
-  //   }
-
-
-  //   db.query(`DELETE FROM interviews WHERE appointment_id = $1::integer`, [
-  //     request.params.id
-  //   ]).then(() => {
-  //     setTimeout(() => {
-  //       response.status(204).json({});
-  //       updateAppointment(Number(request.params.id), null);
-  //     }, 1000);
-  //   });
-  // });
+  router.delete("/cards/:id", (request, response) => {
+    const queryString =  `DELETE FROM cards WHERE card_id = $1`
+    const queryparams = [request.params.id]
+    db.query(queryString, queryparams)
+      .then(() => {
+      setTimeout(() => {
+        response.status(204).json({});
+        updateAppointment(Number(request.params.id), null);
+      }, 1000);
+    });
+  });
 
   return router;
-};
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
