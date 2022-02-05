@@ -6,8 +6,6 @@ Install dependencies with `npm install`.
 
 enter psql by type `psql` in terminal;
 enter `CREATE ROLE businesscard WITH LOGIN password 'businesscard'`;
-enter `CREATE DATABASE businesscard OWNER businesscard`;
-
 ## Creating The DB
 enter `CREATE DATABASE businesscard OWNER businesscard`;
 
@@ -32,8 +30,6 @@ Both of these achieve the same result.
 - Make a `GET` request to `/api/debug/reset` with `curl http://localhost:8001/api/debug/reset`.
 - Use the browser to navigate to `http://localhost:8001/api/debug/reset`.
 
-The `development` data is random. Each time we seed we expect to see different appointments.
-
 ## Run The Server
 
 Running the server normally
@@ -42,91 +38,74 @@ Running the server normally
 npm start
 ```
 
-Running the server so it returns an error when saving/deleting for testing the client's error handling capabilities
 
-```sh
-npm run error
-```
 
 ## Api
 
-### Days
+### USERS
 
-`GET /api/days`
+`GET /api/users`
 
 Response
 
 ```json
 [
-  {
-    "id": 1,
-    "name": "Monday",
-    "appointments": [1, 2],
-    "interviewers": [1, 2],
-    "spots": 0
-  }
+{
+id: 1,
+first_name: "Helen",
+last_name: "Smith"
+},
+{
+id: 2,
+first_name: "Welid",
+last_name: "Semir"
+},
+{
+id: 3,
+first_name: "Laila",
+last_name: "Negash"
+}
 ]
 ```
 
-### Appointments
+### Cards
 
-`GET /api/appointments`
-
-Response:
-
-```json
-{
-  "1": {
-    "id": 1,
-    "time": "12pm",
-    "interview": {
-      "student": "Lydia Miller-Jones",
-      "interviewer": 1
-    }
-  },
-  "2": {
-    "id": 2,
-    "time": "1pm",
-    "interview": {
-      "student": "Archie Cohen",
-      "interviewer": 2
-    }
-  }
-}
-```
-
-`PUT /api/appointments/:id`
-
-Body:
-
-```json
-{
-  "interview": {
-    "student": String,
-    "interviewer": Number
-  }
-}
-```
-
-`DELETE /api/appointments/:id`
-
-### Interviewers
-
-`GET /api/interviewers`
+`GET /api/cards`
 
 Response:
 
 ```json
+[
 {
-  "1": {
-    "id": 1,
-    "name": "Sylvia Palmer",
-    "avatar": "https://i.imgur.com/LpaY82x.png"
-  },
-  "2": {
-    "id": 2,
-    "name": "Tori Malcolm",
-    "avatar": "https://i.imgur.com/Nmx0Qxo.png"
-  }
-}
+id: 1,
+photo: null,
+email: "helen@gmail.com",
+phone: "226-555-6789",
+facebook: null,
+github: "helen-sm",
+linkedln: "helusm1",
+instagram: "helen-sm",
+bio: null
+},
+{
+id: 2,
+photo: null,
+email: "welid@gmail.com",
+phone: "647-544-6892",
+facebook: null,
+github: "welid-semir",
+linkedln: "wildoms",
+instagram: "welid-semir",
+bio: null
+},
+]
 ```
+
+`PUT /api/cards/:id`
+
+
+
+`DELETE /api/cars/:id`
+
+
+
