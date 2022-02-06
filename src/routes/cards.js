@@ -73,12 +73,22 @@ module.exports = (db) => {
 
   // show cards owned by a user
 
-  router.get('/cards/:id', (request, response) => {
-    const queryparams = [request.body.id];
-    const queryString = `SELECT * FROM users JOIN user_cards ON users.id = user_id JOIN cards ON cards.id = card_id WHERE user_id = $1`;
+  router.get('/mycards/:id', (request, response) => {
+    const queryparams = [request.params.id];
+    const queryString = `SELECT * FROM users JOIN user_cards ON users.id = user_id JOIN cards ON cards.id = card_id WHERE user_id = $1 AND isSelfCard = true;`;
     db.query(queryString, queryparams)
       .then(({ rows: cards }) => response.json(cards))
       .catch((error) => console.log(error));
   });
+  // show cards not owned by a user
+
+  router.get('/savedcards/:id', (request, response) => {
+    const queryparams = [request.params.id];
+    const queryString = `SELECT * FROM users JOIN user_cards ON users.id = user_id JOIN cards ON cards.id = card_id WHERE user_id = $1 AND isSelfCard = false;`;
+    db.query(queryString, queryparams)
+      .then(({ rows: cards }) => response.json(cards))
+      .catch((error) => console.log(error));
+  });
+
   return router;
 };
