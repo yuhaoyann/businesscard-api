@@ -1,4 +1,4 @@
-# BusinessCard  API
+# BusinessCard API
 
 Install dependencies with `npm install`.
 
@@ -6,7 +6,9 @@ Install dependencies with `npm install`.
 
 enter psql by type `psql` in terminal;
 enter `CREATE ROLE businesscard WITH LOGIN password 'businesscard'`;
+
 ## Creating The DB
+
 enter `CREATE DATABASE businesscard OWNER businesscard`;
 
 ## Setup
@@ -38,8 +40,6 @@ Running the server normally
 npm start
 ```
 
-
-
 ## Api
 
 ### USERS
@@ -50,21 +50,21 @@ Response
 
 ```json
 [
-{
-id: 1,
-first_name: "Helen",
-last_name: "Smith"
-},
-{
-id: 2,
-first_name: "Welid",
-last_name: "Semir"
-},
-{
-id: 3,
-first_name: "Laila",
-last_name: "Negash"
-}
+  {
+    "id": 1,
+    "first_name": "Helen",
+    "last_name": "Smith"
+  },
+  {
+    "id": 2,
+    "first_name": "Welid",
+    "last_name": "Semir"
+  },
+  {
+    "id": 3,
+    "first_name": "Laila",
+    "last_name": "Negash"
+  }
 ]
 ```
 
@@ -76,36 +76,31 @@ Response:
 
 ```json
 [
-{
-id: 1,
-photo: null,
-email: "helen@gmail.com",
-phone: "226-555-6789",
-facebook: null,
-github: "helen-sm",
-linkedln: "helusm1",
-instagram: "helen-sm",
-bio: null
-},
-{
-id: 2,
-photo: null,
-email: "welid@gmail.com",
-phone: "647-544-6892",
-facebook: null,
-github: "welid-semir",
-linkedln: "wildoms",
-instagram: "welid-semir",
-bio: null
-},
+  {
+    "id": 1,
+    "photo": null,
+    "email": "helen@gmail.com",
+    "phone": "226-555-6789",
+    "facebook": null,
+    "github": "helen-sm",
+    "linkedln": "helusm1",
+    "instagram": "helen-sm",
+    "bio": null
+  },
+  {
+    "id": 2,
+    "photo": null,
+    "email": "welid@gmail.com",
+    "phone": "647-544-6892",
+    "facebook": null,
+    "github": "welid-semir",
+    "linkedln": "wildoms",
+    "instagram": "welid-semir",
+    "bio": null
+  }
 ]
 ```
 
 `PUT /api/cards/:id`
 
-
-
 `DELETE /api/cars/:id`
-
-
-
