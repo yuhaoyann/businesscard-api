@@ -1,9 +1,9 @@
 
-INSERT INTO users (first_name,last_name,email)
+INSERT INTO users (first_name,last_name,email,password)
 VALUES
-  ('Helen','Smith','helen@gmail.com'),
-  ('Welid','Semir','welid@gmail.com'),
-  ('Laila','Negash','laila@gmail.com');
+  ('Helen','Smith','helen@gmail.com','$2b$10$ZLcABB5gFMd5Wra511zDt.4vA4pERzDfcWI2kNB/kKovvTxya1ms'),
+  ('Welid','Semir','welid@gmail.com','$2b$10$ZLcABB5gFMd5Wra511zDt.4vA4pERzDfcWI2kNB/kKovvTxya1ms'),
+  ('Laila','Negash','laila@gmail.com','$2b$10$ZLcABB5gFMd5Wra511zDt.4vA4pERzDfcWI2kNB/kKovvTxya1ms');
   
 INSERT INTO cards (fullname,email,photo,title,company,phone,github,linkedin,facebook,instagram,bio)
 VALUES

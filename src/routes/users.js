@@ -1,7 +1,8 @@
 const router = require("express").Router();
 const { getUserByEmail, authenticateUser } = require("./helpers");
 const bcrypt = require("bcrypt");
-
+// const hashedPassword = bcrypt.hashSync("123456", 10);
+// console.log(hashedPassword)
 module.exports = (db) => {
   router.get("/users", (req, res) => {
     db.query(`SELECT * FROM users`)
@@ -17,13 +18,18 @@ module.exports = (db) => {
       return res.status(400).send("Enter all fields");
     }
 
+    db.query(`SELECT * FROM users`)
+      .then(({ rows: users }) => {
+        // response.json(users);
+      
     if (getUserByEmail(email, users)) {
       return res.status(400).send("Email already exists");
-      console.log("++",users)
+      // console.log("++",users)
     }
 
     
     const hashedPassword = bcrypt.hashSync(password, 10);
+    console.log(hashedPassword)
     const queryString = `INSERT INTO users (first_name,last_name,email,hashedPassword) VALUES ($1,$2,$3,$4) returning *`;
     const queryparams = [first_name, last_name, email, hashedPassword];
     return db
@@ -33,6 +39,7 @@ module.exports = (db) => {
         response.status(200).send("User successefully created")
       )
       .catch((error) => console.log(error));
+    })
   });
 
   router.post("/login", (req, res) => {
