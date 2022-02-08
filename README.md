@@ -83,7 +83,7 @@ Response:
     "phone": "226-555-6789",
     "facebook": null,
     "github": "helen-sm",
-    "linkedln": "helusm1",
+    "linkedin": "helusm1",
     "instagram": "helen-sm",
     "bio": null
   },
@@ -94,7 +94,7 @@ Response:
     "phone": "647-544-6892",
     "facebook": null,
     "github": "welid-semir",
-    "linkedln": "wildoms",
+    "linkedin": "wildoms",
     "instagram": "welid-semir",
     "bio": null
   }

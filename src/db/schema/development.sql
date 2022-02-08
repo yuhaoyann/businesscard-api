@@ -5,7 +5,7 @@ VALUES
   ('Welid','Semir','welid@gmail.com'),
   ('Laila','Negash','laila@gmail.com');
   
-INSERT INTO cards (fullname,email,photo,title,company,phone,github,linkedln,facebook,instagram,bio)
+INSERT INTO cards (fullname,email,photo,title,company,phone,github,linkedin,facebook,instagram,bio)
 VALUES
  ('Helen Smith','helen@gmail.com',
    'https://i.imgur.com/LpaY82x.png',

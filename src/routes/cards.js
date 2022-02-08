@@ -15,16 +15,16 @@ module.exports = (db) => {
   // create a card
 
   router.post('/cards', (request, response) => {
-    const { photo, email, phone, facebook, github, linkedln, instagram, bio } =
+    const { photo, email, phone, facebook, github, linkedin, instagram, bio } =
       request.body;
-    const queryString = `INSERT INTO cards (photo,email,phone,facebook,github,linkedln,instagram,bio) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) returning *`;
+    const queryString = `INSERT INTO cards (photo,email,phone,facebook,github,linkedin,instagram,bio) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) returning *`;
     const queryparams = [
       photo,
       email,
       phone,
       facebook,
       github,
-      linkedln,
+      linkedin,
       instagram,
       bio,
     ];
@@ -40,17 +40,17 @@ module.exports = (db) => {
   // update a card
 
   router.put('/cards/:id', (request, response) => {
-    const { photo, email, phone, facebook, github, linkedln, instagram, bio } =
+    const { photo, email, phone, facebook, github, linkedin, instagram, bio } =
       request.body;
     const { id } = request.params;
-    const queryString = `update cards SET (photo,email,phone,facebook,github,linkedln,instagram,bio) = $1,$2,$3,$4,$5,$6,$7,$8  WHERE card_id = $9`;
+    const queryString = `update cards SET (photo,email,phone,facebook,github,linkedin,instagram,bio) = $1,$2,$3,$4,$5,$6,$7,$8  WHERE card_id = $9`;
     const queryparams = [
       photo,
       email,
       phone,
       facebook,
       github,
-      linkedln,
+      linkedin,
       instagram,
       bio,
       id,

@@ -19,7 +19,7 @@ CREATE TABLE cards (
   company VARCHAR(255),
   phone VARCHAR(255),
   github VARCHAR(255),
-  linkedln VARCHAR(255),
+  linkedin VARCHAR(255),
   facebook VARCHAR(255),
   instagram VARCHAR(255),
   bio VARCHAR(255)
