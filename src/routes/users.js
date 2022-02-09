@@ -2,9 +2,9 @@ const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-// const hashedPassword = bcrypt.hashSync("123456", 10);
-// console.log(hashedPassword)
-console.log("+++++++++++", process.env.JWT_SECRET);
+const hashedPassword = bcrypt.hashSync("pass", 10);
+// console.log(hashedPassword);
+// console.log("+++++++++++", process.env.JWT_SECRET);
 module.exports = (db) => {
   router.get("/", (req, res) => {
     res.status(200).send({
@@ -34,7 +34,6 @@ module.exports = (db) => {
     }
 
     db.query(`SELECT * FROM users WHERE email = $1`, [email]).then((result) => {
-      
       if (result.rows.length > 0) {
         return res.status(400).send("Email already exists");
       }
@@ -67,32 +66,37 @@ module.exports = (db) => {
 
   router.post("/login", (req, res) => {
     const { email, password } = req.body;
+
     db.query(`SELECT * FROM users WHERE email = $1`, [email]).then((result) => {
-      
       if (result.rows.length != 1) {
         return res.status(400).send("User not found");
       }
-    
+
+      console.log("sucess +))))", result.rows);
+
       const user = result.rows[0];
-      if (bcrypt.compareSync(password, user.password)) {
-        // console.log("passss",result.rows[0].password)
-        // res.status(200).send("Successful login")
-        const token = jwt.sign(user, process.env.JWT_SECRET, {
-          expiresIn: "500h",
-        });
-        res.status(200).send({
-          status: "ok",
-          message: "Successefull Login",
-          user,
-          token,
-        });
+      // const hashedPassword = bcrypt.hashSync("pass", 10);
+
+      if (!bcrypt.compareSync(password, user.password)) {
+        // console.log("failer+++++", password, "----", user.password);
+        return res
+          .status(400)
+          .send({ status: "error", message: "Invalid password" });
       }
 
-      return null;
+      user.token = jwt.sign(user, process.env.JWT_SECRET, {
+        expiresIn: "500h",
+      });
+    
+      delete user.password
+      
+      return res.status(200).send({
+        status: "ok",
+        message: "Successefull Login",
+        user
+      });
     });
   });
 
-  
-  
   return router;
 };
