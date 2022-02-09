@@ -20,7 +20,7 @@ module.exports = (db) => {
     user = res.user;
     const { photo, email, phone, facebook, github, linkedin, instagram, bio } =
       req.body;
-    const queryString = `INSERT INTO cards (photo,email,phone,facebook,github,linkedin,instagram,bio) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) returning *`;
+    const queryString = `INSERT INTO cards (photo, email, phone, facebook, github, linkedin, instagram, bio, user_id) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) returning *`;
     const queryparams = [
       photo,
       email,
@@ -30,6 +30,7 @@ module.exports = (db) => {
       linkedin,
       instagram,
       bio,
+      user.id
     ];
     return db
       .query(queryString, queryparams)
@@ -42,12 +43,13 @@ module.exports = (db) => {
 
   // update a card
 
-  // router.put('/cards/:id', (req, res) => {
-  router.put("/cards", (req, res) => {
+ 
+  router.put("/cards/:cardId", validateToken, (req, res) => {
+    const user = req.user
     const { photo, email, phone, facebook, github, linkedin, instagram, bio } =
       req.body;
-    const { id } = req.params;
-    const queryString = `update cards SET (photo,email,phone,facebook,github,linkedin,instagram,bio) = $1,$2,$3,$4,$5,$6,$7,$8  WHERE card_id = $9`;
+    const { cardId } = req.params;
+    const queryString = `update cards SET (photo,email,phone,facebook,github,linkedin,instagram,bio) = $1,$2,$3,$4,$5,$6,$7,$8  WHERE card_id = $9 AND user_id = $10`;
     const queryparams = [
       photo,
       email,
@@ -57,7 +59,8 @@ module.exports = (db) => {
       linkedin,
       instagram,
       bio,
-      id,
+      cardId,
+      user.id
     ];
     return db
       .query(queryString, queryparams)
@@ -67,9 +70,10 @@ module.exports = (db) => {
 
   // delete a card
 
-  router.delete("/cards/:id", (req, res) => {
-    const queryString = `DELETE FROM cards WHERE card_id = $1 returning *`;
-    const queryparams = [req.params.id];
+  router.delete("/cards/:cardId", validateToken, (req, res) => {
+    const user  = req.user
+    const queryString = `DELETE FROM cards WHERE card_id = $1 AND user_id = $2 returning *`;
+    const queryparams = [req.params.id, user.id];
     db.query(queryString, queryparams)
       .then(() => res.rows[0])
       .catch((error) => console.log(error));
@@ -82,7 +86,8 @@ module.exports = (db) => {
     const user = req.user;
     // const queryparams = [req.params.id];
     const queryparams = [user.id];
-    const queryString = `SELECT * FROM users JOIN user_cards ON users.id = user_id JOIN cards ON cards.id = card_id WHERE user_id = $1 AND isSelfCard = true;`;
+     const queryString = `SELECT * FROM users JOIN user_cards ON users.id = user_cards.user_id JOIN cards ON cards.id = card_id WHERE user_cards.user_id = $1 AND isSelfCard = true;`;
+    
     db.query(queryString, queryparams)
       .then(({ rows: cards }) => res.json(cards))
       .catch((error) => console.log(error));
@@ -92,7 +97,7 @@ module.exports = (db) => {
   router.get("/savedcards", validateToken, (req, res) => {
     const user = req.user;
     const queryparams = [user.id];
-    const queryString = `SELECT * FROM users JOIN user_cards ON users.id = user_id JOIN cards ON cards.id = card_id WHERE user_id = $1 AND isSelfCard = false;`;
+    const queryString = `SELECT * FROM users JOIN user_cards ON users.id = user_cards.user_id JOIN cards ON cards.id = card_id WHERE user_cards.user_id = $1 AND isSelfCard = false;`;
     db.query(queryString, queryparams)
       .then(({ rows: cards }) => res.json(cards))
       .catch((error) => console.log(error));
