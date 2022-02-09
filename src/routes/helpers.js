@@ -1,26 +1,19 @@
-
-
-//checks for a user in users database with the  provided email and if found returns the user
-
-const getUserByEmail = function(email,users) {
-  for (const user in users) {
-    if (users[user].email === email) {
-      return users[user];
-    }
+const validateToken = function (req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token == null)
+    return res.status(401).send({ status: "error", message: "No token" });
+  // console.log("token++++++", token);
+  try {
+    const dataStoredInToken = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = dataStoredInToken;
+    next();
+  } catch (error) {
+    return res
+      .status(401)
+      .send({ status: "error", message: "Invalid Session" });
   }
-  return null;
+  // console.log("\n authHeader+++", authHeader);
 };
 
-
-// authenticates and returns a valid  user
-
-const authenticateUser = function(email,password,users) {
-  const user = getUserByEmail(email,users);
-  if (user) {
-    if (bcrypt.compareSync(password, user.password)) {
-      return user;
-    }
-  }
-  return null;
-};
-module.exports =  { getUserByEmail,  authenticateUser };
+module.exports = { validateToken };
