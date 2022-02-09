@@ -13,6 +13,7 @@ CREATE TABLE users (
 
 CREATE TABLE cards (
   id SERIAL PRIMARY KEY NOT NULL,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
   fullname VARCHAR(255),
   email VARCHAR(255),
   photo VARCHAR(255),
