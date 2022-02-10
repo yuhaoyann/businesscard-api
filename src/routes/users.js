@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
+const { request } = require("express");
 const jwt = require("jsonwebtoken");
 
 const hashedPassword = bcrypt.hashSync("pass", 10);
@@ -26,7 +27,8 @@ module.exports = (db) => {
   });
 
   router.post("/register", (req, res) => {
-    const { first_name, last_name, email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
+    console.log("++++",req.body)
     if (!email || !password) {
       return res
         .status(400)
@@ -41,7 +43,7 @@ module.exports = (db) => {
       const hashedPassword = bcrypt.hashSync(password, 10);
       console.log(hashedPassword);
       const queryString = `INSERT INTO users (first_name, last_name, email, password) VALUES ($1,$2,$3,$4) returning *`;
-      const queryparams = [first_name, last_name, email, hashedPassword];
+      const queryparams = [firstName, lastName, email, hashedPassword];
       return db
         .query(queryString, queryparams)
         .then((result) => {
