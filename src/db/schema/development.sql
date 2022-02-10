@@ -2,7 +2,7 @@
 INSERT INTO users (first_name, last_name, email, password)
 VALUES
   ('Helen', 'Smith','helen@gmail.com','$2b$10$iyqfu8WXZnjLVDMFgmfjpujgMLvSLXbDmBs5kTWVK1gtfcqD.P9gy'),
-  ('Welid', 'Semir', 'welid@gmail.com', '$2b$10$ZLcABB5gFMd5Wra511zDt.4vA4pERzDfcWI2kNB/kKovvTxya1ms'),
+  ('Welid', 'Semir', 'welid@gmail.com', '$2b$10$iyqfu8WXZnjLVDMFgmfjpujgMLvSLXbDmBs5kTWVK1gtfcqD.P9gy' ),
   ('Laila','Negash','laila@gmail.com', '$2b$10$iyqfu8WXZnjLVDMFgmfjpujgMLvSLXbDmBs5kTWVK1gtfcqD.P9gy');
   
 INSERT INTO cards (user_id, fullname, email, photo, title, company, phone, github, linkedin, facebook, instagram, bio)
