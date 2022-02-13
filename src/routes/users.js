@@ -52,13 +52,13 @@ module.exports = (db) => {
           const token = jwt.sign(user, process.env.JWT_SECRET, {
             expiresIn: '500h',
           });
+          user.token = token;
           console.log('***********jwt', token);
           // res.status(200).send("User successefully created")
           res.status(200).send({
             status: 'ok',
             message: 'User successefully created',
             user,
-            token,
           });
         })
         .catch((error) => console.log(error));

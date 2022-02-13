@@ -72,7 +72,10 @@ module.exports = (db) => {
           `;
         const queryparams1 = [user.id, result.rows[0].id, true];
         db.query(queryString1, queryparams1).then((r) => {
-          res.send({ id: result.rows[0].id });
+          res.send({
+            id: result.rows[0].id,
+            message: `Card ID ${result.rows[0].id} successfully created`,
+          });
         });
       })
       .catch((error) => console.log(error));
@@ -117,7 +120,6 @@ module.exports = (db) => {
     const queryparams = [req.params.cardId, user.id];
     db.query(queryString, queryparams)
       .then((r) => {
-        console.log(r.rows[0]);
         res.send(`Card ID ${req.params.cardId} successfully deleted`);
       })
       .catch((error) => console.log(error));
