@@ -85,25 +85,61 @@ module.exports = (db) => {
 
   router.put('/cards/:cardId', validateToken, (req, res) => {
     const { user } = req;
-    const { photo, email, phone, facebook, github, linkedin, instagram, bio } =
-      req.body;
-    const { cardId } = req.params;
-    const queryString = `update cards SET (photo,email,phone,facebook,github,linkedin,instagram,bio) = $1,$2,$3,$4,$5,$6,$7,$8  WHERE card_id = $9 AND user_id = $10`;
-    const queryparams = [
-      photo,
+    const {
+      fullname,
       email,
+      photo,
+      title,
+      company,
       phone,
-      facebook,
       github,
       linkedin,
+      facebook,
       instagram,
       bio,
-      cardId,
+    } = req.body.card;
+    const queryString = `
+    UPDATE
+    cards SET (
+      fullname,
+      email,
+      photo,
+      title,
+      company,
+      phone,
+      github,
+      linkedin,
+      facebook,
+      instagram,
+      bio)
+      =
+      ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+      WHERE id = $12
+      AND user_id = $13
+      returning *;`;
+    const queryparams = [
+      fullname,
+      email,
+      photo,
+      title,
+      company,
+      phone,
+      github,
+      linkedin,
+      facebook,
+      instagram,
+      bio,
+      req.params.cardId,
       user.id,
     ];
     return db
       .query(queryString, queryparams)
-      .then((result) => result.rows[0])
+      .then((result) => {
+        res.send({
+          id: result.rows[0].id,
+          message: `Card ID ${result.rows[0].id} successfully edited`,
+        });
+      })
       .catch((error) => console.log(error));
   });
 
