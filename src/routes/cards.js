@@ -1,5 +1,3 @@
-const res = require('express/lib/response');
-
 const router = require('express').Router();
 
 const { validateToken } = require('./helpers');
@@ -16,10 +14,9 @@ module.exports = (db) => {
 
   // create a card
 
-  router.put('/cards', validateToken, (req, res) => {
-    user = res.user;
+  router.post('/cards', validateToken, (req, res) => {
+    const { user } = req;
     const {
-      userid,
       fullname,
       email,
       photo,
@@ -31,13 +28,11 @@ module.exports = (db) => {
       facebook,
       instagram,
       bio,
-    } = request.body.card;
+    } = req.body.card;
     const queryString = `
     INSERT INTO 
-    users 
-    JOIN user_cards ON users.id = user_id
-    JOIN cards ON cards.id = card_id WHERE(
-      userid,
+    cards (
+      user_id,
       fullname,
       email,
       photo,
@@ -48,9 +43,12 @@ module.exports = (db) => {
       linkedin,
       facebook,
       instagram,
-      bio) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) returning *`;
+      bio)
+      VALUES
+      ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+      returning *;`;
     const queryparams = [
-      userid,
+      user.id,
       fullname,
       email,
       photo,
@@ -65,16 +63,25 @@ module.exports = (db) => {
     ];
     return db
       .query(queryString, queryparams)
-      .then((result) =>
-        // return result.rows[0];
-        res.status(200).send('Card successefully created')
-      )
+      .then((result) => {
+        console.log(result.rows[0]);
+        const queryString1 = `
+          INSERT INTO
+          user_cards (user_id, card_id, isSelfCard)
+          VALUES ($1, $2, $3)
+          returning *;
+          `;
+        const queryparams1 = [user.id, result.rows[0].id, true];
+        db.query(queryString1, queryparams1).then((r) => {
+          res.send({ id: r.rows[0].id });
+        });
+      })
       .catch((error) => console.log(error));
   });
 
   // update a card
 
-  router.post('/cards/:cardId', validateToken, (req, res) => {
+  router.put('/cards/:cardId', validateToken, (req, res) => {
     const { user } = req;
     const { photo, email, phone, facebook, github, linkedin, instagram, bio } =
       req.body;
@@ -116,7 +123,7 @@ module.exports = (db) => {
     const { user } = req;
     // const queryparams = [req.params.id];
     const queryparams = [user.id];
-    const queryString = `SELECT * FROM users JOIN user_cards ON users.id = user_cards.user_id JOIN cards ON cards.id = card_id WHERE user_cards.user_id = $1 AND isSelfCard = true;`;
+    const queryString = `SELECT * FROM user_cards JOIN cards ON cards.id = card_id WHERE user_cards.user_id = $1 AND isSelfCard = true;`;
 
     db.query(queryString, queryparams)
       .then(({ rows: cards }) => res.json(cards))
@@ -127,7 +134,7 @@ module.exports = (db) => {
   router.get('/savedcards', validateToken, (req, res) => {
     const { user } = req;
     const queryparams = [user.id];
-    const queryString = `SELECT * FROM users JOIN user_cards ON users.id = user_cards.user_id JOIN cards ON cards.id = card_id WHERE user_cards.user_id = $1 AND isSelfCard = false;`;
+    const queryString = `SELECT * FROM user_cards JOIN cards ON cards.id = card_id WHERE user_cards.user_id = $1 AND isSelfCard = false;`;
     db.query(queryString, queryparams)
       .then(({ rows: cards }) => res.json(cards))
       .catch((error) => console.log(error));
