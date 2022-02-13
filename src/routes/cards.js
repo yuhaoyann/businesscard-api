@@ -64,7 +64,6 @@ module.exports = (db) => {
     return db
       .query(queryString, queryparams)
       .then((result) => {
-        console.log(result.rows[0]);
         const queryString1 = `
           INSERT INTO
           user_cards (user_id, card_id, isSelfCard)
@@ -73,7 +72,7 @@ module.exports = (db) => {
           `;
         const queryparams1 = [user.id, result.rows[0].id, true];
         db.query(queryString1, queryparams1).then((r) => {
-          res.send({ id: r.rows[0].id });
+          res.send({ id: result.rows[0].id });
         });
       })
       .catch((error) => console.log(error));
@@ -109,10 +108,18 @@ module.exports = (db) => {
 
   router.delete('/cards/:cardId', validateToken, (req, res) => {
     const { user } = req;
-    const queryString = `DELETE FROM cards WHERE card_id = $1 AND user_id = $2 returning *`;
-    const queryparams = [req.params.id, user.id];
+    const queryString = `
+    DELETE FROM cards
+    WHERE id = $1
+    AND user_id = $2
+    returning *;
+    `;
+    const queryparams = [req.params.cardId, user.id];
     db.query(queryString, queryparams)
-      .then(() => res.rows[0])
+      .then((r) => {
+        console.log(r.rows[0]);
+        res.send(`Card ID ${req.params.cardId} successfully deleted`);
+      })
       .catch((error) => console.log(error));
   });
 
@@ -123,8 +130,13 @@ module.exports = (db) => {
     const { user } = req;
     // const queryparams = [req.params.id];
     const queryparams = [user.id];
-    const queryString = `SELECT * FROM user_cards JOIN cards ON cards.id = card_id WHERE user_cards.user_id = $1 AND isSelfCard = true;`;
-
+    const queryString = `
+    SELECT *
+    FROM user_cards
+    JOIN cards ON cards.id = card_id
+    WHERE user_cards.user_id = $1
+    AND isSelfCard = true;
+    `;
     db.query(queryString, queryparams)
       .then(({ rows: cards }) => res.json(cards))
       .catch((error) => console.log(error));
@@ -134,7 +146,13 @@ module.exports = (db) => {
   router.get('/savedcards', validateToken, (req, res) => {
     const { user } = req;
     const queryparams = [user.id];
-    const queryString = `SELECT * FROM user_cards JOIN cards ON cards.id = card_id WHERE user_cards.user_id = $1 AND isSelfCard = false;`;
+    const queryString = `
+    SELECT *
+    FROM user_cards
+    JOIN cards ON cards.id = card_id
+    WHERE user_cards.user_id = $1
+    AND isSelfCard = false;
+    `;
     db.query(queryString, queryparams)
       .then(({ rows: cards }) => res.json(cards))
       .catch((error) => console.log(error));
