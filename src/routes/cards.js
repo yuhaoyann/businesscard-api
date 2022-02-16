@@ -12,6 +12,23 @@ module.exports = (db) => {
       .catch((error) => console.log(error));
   });
 
+  // Get specific card
+
+  router.get('/cards/:cardId', (req, res) => {
+    const queryString = `
+    SELECT *
+    FROM cards
+    WHERE cards.id = $1
+    `;
+    const queryparams = [req.params.cardId];
+    db.query(queryString, queryparams)
+      .then(({ rows: cards }) => {
+        console.log(cards);
+        res.json(cards);
+      })
+      .catch((error) => console.log(error));
+  });
+
   // create a card
 
   router.post('/cards', validateToken, (req, res) => {
