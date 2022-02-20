@@ -72,6 +72,10 @@ module.exports = (db) => {
   router.post('/login', (req, res) => {
     const { email, password } = req.body;
 
+    if (!email || !password) {
+      return res.status(400).send('Please fill all fields');
+    }
+
     db.query(`SELECT * FROM users WHERE email = $1`, [email]).then((result) => {
       if (result.rows.length !== 1) {
         return res.status(400).send('Invalid username/password');
