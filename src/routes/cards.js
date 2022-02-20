@@ -213,5 +213,39 @@ module.exports = (db) => {
       .catch((error) => console.log(error));
   });
 
+  router.post('/usercards/:cardId', validateToken, (req, res) => {
+    const { user } = req;
+    const queryString = `
+    SELECT *
+    FROM user_cards
+    JOIN cards ON cards.id = card_id
+    WHERE user_cards.user_id = $1
+    AND user_cards.card_id = $2
+    `;
+    const queryparams = [user.id, req.params.cardId];
+    db.query(queryString, queryparams)
+      .then((response) => {
+        console.log(response.rows);
+        if (response.rows[0]) {
+          res.status(400).send('You already have this card');
+        }
+        if (!response.rows[0]) {
+          const queryString1 = `
+          INSERT INTO
+          user_cards (user_id, card_id, isSelfCard)
+          VALUES ($1, $2, $3)
+          returning *;
+          `;
+          const queryparams1 = [user.id, req.params.cardId, false];
+          db.query(queryString1, queryparams1)
+            .then((r) => {
+              res.send(`Card ID ${req.params.cardId} successfully saved`);
+            })
+            .catch((error) => console.log(error));
+        }
+      })
+      .catch((error) => console.log(error));
+  });
+
   return router;
 };
