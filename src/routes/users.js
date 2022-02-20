@@ -17,52 +17,52 @@ module.exports = (db) => {
     });
   });
 
-  router.get('/users', (req, res) => {
-    db.query(`SELECT * FROM users`)
-      .then(({ rows: users }) => {
-        res.json(users);
-      })
-      .catch((error) => console.log(error));
-  });
+  // unsafe to display user with password
+  // router.get('/users', (req, res) => {
+  //   db.query(`SELECT * FROM users`)
+  //     .then(({ rows: users }) => {
+  //       res.json(users);
+  //     })
+  //     .catch((error) => console.log(error));
+  // });
 
   router.post('/register', (req, res) => {
     const { firstName, lastName, email, password } = req.body;
     console.log('++++', req.body);
-    if (!email || !password) {
-      return res
-        .status(400)
-        .send({ status: 'error', message: 'Enter all fields' });
+    if (!firstName || !lastName || !email || !password) {
+      return res.status(400).json({ error: '123' });
     }
-
-    db.query(`SELECT * FROM users WHERE email = $1`, [email]).then((result) => {
-      if (result.rows.length > 0) {
-        return res.status(400).send('Email already exists');
-      }
-
-      const hashedPassword = bcrypt.hashSync(password, 10);
-      // console.log(hashedPassword);
-      const queryString = `INSERT INTO users (first_name, last_name, email, password) VALUES ($1,$2,$3,$4) returning *`;
-      const queryparams = [firstName, lastName, email, hashedPassword];
-      return db
-        .query(queryString, queryparams)
-        .then((r) => {
-          const user = r.rows[0];
-          delete user.password;
-          console.log('userrrrr', user);
-          const token = jwt.sign(user, process.env.JWT_SECRET, {
-            expiresIn: '500h',
-          });
-          user.token = token;
-          console.log('***********jwt', token);
-          // res.status(200).send("User successefully created")
-          res.status(200).send({
-            status: 'ok',
-            message: 'User successefully created',
-            user,
-          });
-        })
-        .catch((error) => console.log(error));
-    });
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    // console.log(hashedPassword);
+    const queryString = `
+    INSERT INTO users (
+    first_name,
+    last_name,
+    email,
+    password)
+    VALUES ($1,$2,$3,$4)
+    returning *;
+    `;
+    const queryparams = [firstName, lastName, email, hashedPassword];
+    return db
+      .query(queryString, queryparams)
+      .then((r) => {
+        const user = r.rows[0];
+        delete user.password;
+        console.log('userrrrr', user);
+        const token = jwt.sign(user, process.env.JWT_SECRET, {
+          expiresIn: '500h',
+        });
+        user.token = token;
+        console.log('***********jwt', token);
+        // res.status(200).send("User successefully created")
+        res.status(200).send({
+          status: 'ok',
+          message: 'User successefully created',
+          user,
+        });
+      })
+      .catch((error) => console.log(error));
   });
 
   router.post('/login', (req, res) => {
