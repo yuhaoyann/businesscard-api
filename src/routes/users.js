@@ -30,7 +30,7 @@ module.exports = (db) => {
     const { firstName, lastName, email, password } = req.body;
     console.log('++++', req.body);
     if (!firstName || !lastName || !email || !password) {
-      return res.status(400).json({ error: '123' });
+      return res.status(400).send('Please fill all fields');
     }
     const hashedPassword = bcrypt.hashSync(password, 10);
     // console.log(hashedPassword);
@@ -62,7 +62,11 @@ module.exports = (db) => {
           user,
         });
       })
-      .catch((error) => console.log(error));
+      .catch((error) =>
+        error.code === '23505'
+          ? res.status(400).send('Email already exists')
+          : res.status(400).send(error.detail)
+      );
   });
 
   router.post('/login', (req, res) => {
@@ -70,7 +74,7 @@ module.exports = (db) => {
 
     db.query(`SELECT * FROM users WHERE email = $1`, [email]).then((result) => {
       if (result.rows.length !== 1) {
-        return res.status(400).send('User not found');
+        return res.status(400).send('Invalid username/password');
       }
 
       console.log('sucess +))))', result.rows);
@@ -80,9 +84,7 @@ module.exports = (db) => {
 
       if (!bcrypt.compareSync(password, user.password)) {
         // console.log("failer+++++", password, "----", user.password);
-        return res
-          .status(400)
-          .send({ status: 'error', message: 'Invalid password' });
+        return res.status(400).send('Invalid username/password');
       }
 
       user.token = jwt.sign(user, process.env.JWT_SECRET, {
