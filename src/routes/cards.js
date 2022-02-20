@@ -247,5 +247,21 @@ module.exports = (db) => {
       .catch((error) => console.log(error));
   });
 
+  router.delete('/usercards/:cardId', validateToken, (req, res) => {
+    const { user } = req;
+    const queryString = `
+    DELETE FROM user_cards
+    WHERE user_id = $1
+    AND card_id = $2
+    returning *;
+    `;
+    const queryparams = [user.id, req.params.cardId];
+    db.query(queryString, queryparams)
+      .then((r) => {
+        res.send(`Card ID ${req.params.cardId} successfully deleted`);
+      })
+      .catch((error) => console.log(error));
+  });
+
   return router;
 };
