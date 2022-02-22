@@ -1,19 +1,21 @@
-# BusinessCard API
+# iCard API
 
-Install dependencies with `npm install`.
+Backend API server for iCard APP, go to [iCard](https://adoring-volhard-7e0798.netlify.app/) and enjoy the APP
+
+# Local Setup
 
 ## Creating ROLE
 
-enter psql by type `psql` in terminal;
-enter `CREATE ROLE businesscard WITH LOGIN password 'businesscard'`;
+- enter psql by type `psql` in terminal;
+- enter `CREATE ROLE businesscard WITH LOGIN password 'businesscard'`;
 
 ## Creating The DB
 
-enter `CREATE DATABASE businesscard OWNER businesscard`;
+- enter `CREATE DATABASE businesscard OWNER businesscard`;
 
 ## Setup
 
-Copy the `.env.example` file to `.env.development` and fill in the necessary PostgreSQL configuration. The `node-postgres` library uses these environment variables by default.
+- Copy the `.env.example` file to `.env.development` and fill in the necessary PostgreSQL configuration. The `node-postgres` library uses these environment variables by default.
 
 ```
 PGHOST=localhost
@@ -21,11 +23,12 @@ PGUSER=businesscard
 PGDATABASE=businesscard
 PGPASSWORD=businesscard
 PGPORT=5432
+JWT_SECRET=[enter your JSON Web Token key]
 ```
 
 ## Seeding
 
-Run a the development server with `npm start` in the Host environment. We are only using vagrant for `psql` this week.
+Run the development server with `npm start` in the Host environment.
 
 Both of these achieve the same result.
 
@@ -39,68 +42,3 @@ Running the server normally
 ```sh
 npm start
 ```
-
-## Api
-
-### USERS
-
-`GET /api/users`
-
-Response
-
-```json
-[
-  {
-    "id": 1,
-    "first_name": "Helen",
-    "last_name": "Smith"
-  },
-  {
-    "id": 2,
-    "first_name": "Welid",
-    "last_name": "Semir"
-  },
-  {
-    "id": 3,
-    "first_name": "Laila",
-    "last_name": "Negash"
-  }
-]
-```
-
-### Cards
-
-`GET /api/cards`
-
-Response:
-
-```json
-[
-  {
-    "id": 1,
-    "photo": null,
-    "email": "helen@gmail.com",
-    "phone": "226-555-6789",
-    "facebook": null,
-    "github": "helen-sm",
-    "linkedin": "helusm1",
-    "instagram": "helen-sm",
-    "bio": null
-  },
-  {
-    "id": 2,
-    "photo": null,
-    "email": "welid@gmail.com",
-    "phone": "647-544-6892",
-    "facebook": null,
-    "github": "welid-semir",
-    "linkedin": "wildoms",
-    "instagram": "welid-semir",
-    "bio": null
-  }
-]
-```
-
-`PUT /api/cards/:id`
-
-`DELETE /api/cars/:id`
